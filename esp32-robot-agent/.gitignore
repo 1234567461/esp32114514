@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.env
+*.log
+node_modules/
+.venv/
+venv/
+*.ino.bin
+*.elf
+.DS_Store

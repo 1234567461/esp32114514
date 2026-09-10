@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 Robot Agent 控制台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🤖 ESP32 Robot Agent 控制台</h1>
+    <div class="status-bar">
+      <span id="conn-status" class="status-dot"></span>
+      <span id="conn-text">连接中...</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- 机器人控制 -->
+    <section class="card">
+      <h2>🎮 机器人控制</h2>
+      <div class="dpad">
+        <button onclick="robotCmd('forward')" class="btn-up">↑ 前进</button>
+        <button onclick="robotCmd('left')" class="btn-left">← 左转</button>
+        <button onclick="robotCmd('stop')" class="btn-stop">■ 停止</button>
+        <button onclick="robotCmd('right')" class="btn-right">右转 →</button>
+        <button onclick="robotCmd('backward')" class="btn-down">↓ 后退</button>
+      </div>
+      <div class="slider-group">
+        <label>速度: <span id="speed-val">60</span>%</label>
+        <input type="range" id="speed" min="0" max="100" value="60" oninput="document.getElementById('speed-val').textContent=this.value">
+      </div>
+      <div class="slider-group">
+        <label>机械臂角度: <span id="arm-val">90</span>°</label>
+        <input type="range" id="arm" min="0" max="180" value="90" oninput="document.getElementById('arm-val').textContent=this.value">
+        <button onclick="robotCmd('arm', {angle: document.getElementById('arm').value})" class="btn-small">设置</button>
+      </div>
+      <div class="info-box" id="robot-status">
+        <p>IP: --</p>
+        <p>RSSI: -- dBm</p>
+        <p>距离: -- cm</p>
+      </div>
+    </section>
+
+    <!-- 网络扫描 -->
+    <section class="card">
+      <h2>🔍 网络扫描</h2>
+      <div class="input-group">
+        <input type="text" id="scan-ip" placeholder="目标 IP (如 192.168.1.1)">
+        <input type="text" id="scan-ports" placeholder="端口 (如 22,80,443)" value="22,80,443,3306,8080">
+        <button onclick="scanPorts()" class="btn-primary">扫描端口</button>
+      </div>
+      <div class="input-group">
+        <input type="text" id="scan-cidr" placeholder="子网 (如 192.168.1.0/24)" value="192.168.1.0/24">
+        <button onclick="discoverHosts()" class="btn-primary">发现主机</button>
+      </div>
+      <pre id="scan-result" class="result-box">等待扫描...</pre>
+    </section>
+
+    <!-- 连通性监控 -->
+    <section class="card">
+      <h2>📡 连通性监控</h2>
+      <div class="input-group">
+        <input type="text" id="ping-host" placeholder="目标主机" value="8.8.8.8">
+        <input type="number" id="ping-count" value="5" min="1" max="100" style="width:80px">
+        <button onclick="pingHost()" class="btn-primary">Ping</button>
+        <button onclick="traceroute()" class="btn-secondary">路由追踪</button>
+      </div>
+      <pre id="ping-result" class="result-box">等待测试...</pre>
+    </section>
+
+    <!-- Wi-Fi 信号 -->
+    <section class="card">
+      <h2>📶 Wi-Fi 信号</h2>
+      <button onclick="getWifiSignal()" class="btn-primary">刷新信号</button>
+      <div class="info-box" id="wifi-info">
+        <p>SSID: --</p>
+        <p>BSSID: --</p>
+        <p>信号强度: -- dBm</p>
+        <p>噪声: -- dBm</p>
+      </div>
+    </section>
+
+    <!-- GPIO 控制 -->
+    <section class="card">
+      <h2>🔌 GPIO 控制（树莓派）</h2>
+      <div class="btn-row">
+        <button onclick="gpioLed(true)" class="btn-on">LED 开</button>
+        <button onclick="gpioLed(false)" class="btn-off">LED 关</button>
+        <button onclick="readDHT()" class="btn-primary">读温湿度</button>
+      </div>
+      <pre id="dht-result" class="result-box">--</pre>
+    </section>
+  </div>
+
+  <footer>
+    <p>ESP32 Robot Agent · 仅用于授权自有网络的合法诊断</p>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
